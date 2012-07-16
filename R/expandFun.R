@@ -9,7 +9,7 @@
 #'@param formula A mathematical expression (see examples and \code{\link{plotFun}})
 #'@param \ldots additional parameters
 #'
-#'@return A new formula with expanded left-hand side.
+#'@return A list with the new expanded formula and the combined formals
 #'
 #'
 #'@examples

@@ -67,7 +67,6 @@
 #' 
 
 D <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
-  browser()
   tryCatch( return( stats::D(formula, ...) ), error=function(e) {}  )
 
   formulaEnv = environment(formula) # where was the formula made?

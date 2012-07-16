@@ -67,7 +67,7 @@
 #' 
 
 D <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
-
+  browser()
   tryCatch( return( stats::D(formula, ...) ), error=function(e) {}  )
 
   formulaEnv = environment(formula) # where was the formula made?
@@ -75,10 +75,14 @@ D <- function(formula, ..., .hstep=NULL,add.h.control=FALSE){
   res = try(symbolicD(formula, ...), silent=TRUE)
   #Failed?  Do it numerically  
   if( inherits(res, "try-error") ){ # first symbolic attempt unsuccessful
-    newformula <- try(expandFun(formula), silent=TRUE)
+    expandedForm <-try(expandFun(formula), silent=TRUE)
+    if(!inherits(expandedForm, "try-error"))
+      newformula <- expandedForm$formula
     res = try(symbolicD(newformula, ...), silent=TRUE)
     if( inherits(res, "try-error") ) # second symbolic attempt unsuccessful
       res = numD( formula, ..., .hstep=.hstep, add.h.control=add.h.control)
+    else #extracted function correctly
+      formals(res) = expandedForm$formals
   }
   else # it's generated from symbolicD
     environment(res) = formulaEnv # function should refer to environment of the formula

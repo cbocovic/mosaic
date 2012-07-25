@@ -87,14 +87,18 @@ findZerosMult <- function(..., npts=10, rad = 5, near=0, sortBy='byx'){
         root = troot*pt1+(1-troot)*pt2
         roots <- rbind(roots, root)
         if(length(rows(roots)) >= npts){
-          colnames(roots) = rhsVars
-          return(.sort(roots, near = near, type=sortBy)) #return ordered by the first variable.
+          colnames(roots) <- rhsVars
+          roots = .sort(roots, near = near, type=sortBy)
+          rownames(roots) <- (1:(length(rows(roots))))
+          return(roots) #return ordered by the first variable.
         }
       }
     }
     if(length(roots)==0) stop("No roots found - try widening search")
     colnames(roots) = rhsVars
-    return(.sort(roots, near = near, type=sortBy))
+    roots = .sort(roots, near = near, type=sortBy)
+    rownames(roots) <- (1:(length(rows(roots))))
+    return(roots)
   }
   
   #Use Broyden when system has more than one equation.
@@ -141,15 +145,18 @@ findZerosMult <- function(..., npts=10, rad = 5, near=0, sortBy='byx'){
               roots = rbind(roots, root)
             }
             if(length(rows(roots)) >= npts){
-              colnames(roots) = rhsVars
-              return(.sort(roots, near = near, type=sortBy)) #return ordered by the first variable.
+              roots = .sort(roots, near = near, type=sortBy)
+              rownames(roots) <- (1:(length(rows(roots))))
+              return(roots) #return ordered by the first variable.
             }
           }
         }
       }
       if(length(roots)==0) stop("No zeros found - try widening search")
       colnames(roots) = rhsVars
-      return(.sort(roots, near = near, type=sortBy))
+      roots = .sort(roots, near = near, type=sortBy)
+      rownames(roots) <- (1:(length(rows(roots))))
+      return(roots)
       
     }
     
@@ -258,7 +265,7 @@ findZerosMult <- function(..., npts=10, rad = 5, near=0, sortBy='byx'){
 #'
 #'@param maxiters maximum number of iterations.
 #'
-Broyden <- function(system, vars, x=0, tol = .Machine$double.eps^0.25, maxiters=1e3){
+Broyden <- function(system, vars, x=0, tol = .Machine$double.eps^0.4, maxiters=1e4){
   n = length(system)
   if(is.null(x)) x = rep(1,length(system))#Add in something that makes sure this is valid.
   if(toString(names(x))=="") names(x) = vars
